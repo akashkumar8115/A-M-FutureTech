@@ -1,3 +1,11 @@
+import { pageMetadata } from '@/lib/seo';
+
+export const metadata = pageMetadata({
+  title: 'Cookie Policy',
+  description: 'How A&M FutureTech uses cookies and similar technologies on this website.',
+  path: '/cookie-policy',
+});
+
 export default function CookiePolicyPage() {
   return (
     <main>
@@ -5,10 +13,10 @@ export default function CookiePolicyPage() {
         <div className="container max-w-4xl">
           <span className="badge">Cookie policy</span>
           <h1 className="section-title mt-6">Cookie Policy</h1>
-          <div className="mt-8 space-y-5 text-slate-300">
-            <p>This website may use cookies and similar tracking technologies to understand website usage, improve performance, and support a better user experience.</p>
-            <p>Cookies help us remember preferences, analyze traffic patterns, and optimize content delivery. Users may configure their browsers to manage or block cookies according to their preference.</p>
-            <p>By continuing to use our website, you consent to the use of cookies as described in this policy.</p>
+          <div className="mt-8 space-y-5 text-[var(--text-soft)]">
+            <p>This website may use essential cookies to keep the site working, remember theme preference, and protect the admin session. Analytics or performance cookies, if enabled, help us understand which pages are useful.</p>
+            <p>You can control or block cookies in your browser settings. Disabling some cookies may affect form recovery, theme memory, or dashboard login.</p>
+            <p>By continuing to use the site, you agree to this cookie use as described here and in our Privacy Policy.</p>
           </div>
         </div>
       </section>

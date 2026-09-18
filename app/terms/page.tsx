@@ -1,3 +1,11 @@
+import { pageMetadata } from '@/lib/seo';
+
+export const metadata = pageMetadata({
+  title: 'Terms & Conditions',
+  description: 'Website terms, proposal conditions, and commercial engagement rules for A&M FutureTech.',
+  path: '/terms',
+});
+
 export default function TermsPage() {
   return (
     <main>
@@ -5,10 +13,11 @@ export default function TermsPage() {
         <div className="container max-w-4xl">
           <span className="badge">Terms</span>
           <h1 className="section-title mt-6">Terms & Conditions</h1>
-          <div className="mt-8 space-y-5 text-slate-300">
-            <p>By using this website, you acknowledge that the information published here is for general informational purposes and does not establish a contractual relationship unless explicitly agreed in writing.</p>
-            <p>All project proposals, estimates, and statements of work remain subject to mutual agreement, scope confirmation, and commercial terms approved by both parties.</p>
-            <p>We reserve the right to update the content, offerings, and policies on this website from time to time without prior notice.</p>
+          <div className="mt-8 space-y-5 text-[var(--text-soft)]">
+            <p>By using this website you agree that published information is for general guidance and does not create a contract until both parties approve a written proposal, statement of work, or service agreement.</p>
+            <p>All estimates, timelines, and recommendations remain subject to discovery, scope confirmation, and commercial approval. Intellectual property, source code, and deliverables transfer only as defined in the signed engagement documents.</p>
+            <p>You are responsible for providing accurate project information, timely feedback, and lawful use of any materials you submit through our forms.</p>
+            <p>We may update website content, service descriptions, and these terms without prior notice. Continued use of the site after changes constitutes acceptance of the revised terms.</p>
           </div>
         </div>
       </section>

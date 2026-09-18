@@ -10,7 +10,7 @@ export default function PortfolioPage() {
         </div>
       </section>
 
-      <section className="section-shell bg-slate-950/40">
+      <section className="section-shell surface-alt">
         <div className="container">
           <PortfolioGrid />
         </div>

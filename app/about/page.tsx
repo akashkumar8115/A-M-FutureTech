@@ -8,7 +8,7 @@ export default function AboutPage() {
       <section className="section-shell">
         <div className="container max-w-5xl">
           <div className="grid items-center gap-8 md:grid-cols-[auto_1fr]">
-            <div className="flex h-36 w-36 items-center justify-center rounded-2xl border border-white/10 bg-slate-950 p-3 shadow-lg shadow-slate-950/20">
+            <div className="flex h-36 w-36 items-center justify-center rounded-2xl border border-[var(--border)] bg-[var(--chip)] p-3 shadow-[var(--shadow-soft)]">
               <Logo />
             </div>
             <div>
@@ -26,7 +26,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="section-shell bg-slate-950/40">
+      <section className="section-shell surface-alt">
         <div className="container grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {[
             'Experienced Development Team',
@@ -37,8 +37,8 @@ export default function AboutPage() {
             'Client-Focused Approach',
           ].map((point) => (
             <div key={point} className="card-panel p-6">
-              <CheckCircle2 className="mb-4 text-cyan-400" size={24} />
-              <h3 className="text-xl font-bold text-white">{point}</h3>
+              <CheckCircle2 className="mb-4 text-[var(--link)]" size={24} />
+              <h3 className="text-xl font-bold text-[var(--text)]">{point}</h3>
             </div>
           ))}
         </div>
@@ -48,12 +48,12 @@ export default function AboutPage() {
         <div className="container grid gap-6 md:grid-cols-2 xl:grid-cols-4">
           {siteConfig.stats.map((stat, index) => (
             <div key={stat.label} className="card-panel p-6">
-              <div className="text-4xl font-black text-white">
+              <div className="text-4xl font-black text-[var(--text)]">
                 {stat.value}
-                <span className="text-xl text-cyan-300">{stat.suffix}</span>
+                <span className="text-xl text-[var(--link)]">{stat.suffix}</span>
               </div>
-              <p className="mt-3 text-slate-300">{stat.label}</p>
-              <div className="mt-5 h-1.5 rounded-full bg-slate-800">
+              <p className="mt-3 text-[var(--text-soft)]">{stat.label}</p>
+              <div className="mt-5 h-1.5 rounded-full progress-track">
                 <div className="h-1.5 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400" style={{ width: `${60 + index * 8}%` }} />
               </div>
             </div>

@@ -1,6 +1,13 @@
 import { siteConfig } from '@/lib/site-data';
 import { CheckCircle2 } from 'lucide-react';
 import { CareerForm } from '@/components/CareerForm';
+import { pageMetadata } from '@/lib/seo';
+
+export const metadata = pageMetadata({
+  title: 'Careers',
+  description: 'Join A&M FutureTech. Apply for full stack, UI/UX, and cloud engineering roles.',
+  path: '/careers',
+});
 
 export default function CareersPage() {
   return (
@@ -15,14 +22,14 @@ export default function CareersPage() {
         </div>
       </section>
 
-      <section className="section-shell bg-slate-950/40">
+      <section className="section-shell surface-alt">
         <div className="container grid gap-6">
           {siteConfig.careers.map((job) => (
             <div key={job.title} className="card-panel p-6">
               <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-white">{job.title}</h2>
-                  <div className="mt-3 flex flex-wrap gap-3 text-sm text-slate-300">
+                  <h2 className="text-2xl font-bold text-[var(--text)]">{job.title}</h2>
+                  <div className="mt-3 flex flex-wrap gap-3 text-sm text-[var(--text-soft)]">
                     <span>{job.department}</span>
                     <span>•</span>
                     <span>{job.type}</span>
@@ -34,10 +41,10 @@ export default function CareersPage() {
                 </div>
                 <a href="#apply" className="primary-btn">Apply Now</a>
               </div>
-              <p className="mt-5 text-slate-300">{job.description}</p>
-              <ul className="mt-5 space-y-2 text-slate-300">
+              <p className="mt-5 text-[var(--text-soft)]">{job.description}</p>
+              <ul className="mt-5 space-y-2 text-[var(--text-soft)]">
                 {job.requirements.map((req) => (
-                  <li key={req} className="flex items-start gap-2"><CheckCircle2 size={16} className="mt-0.5 text-cyan-400" /> {req}</li>
+                  <li key={req} className="flex items-start gap-2"><CheckCircle2 size={16} className="mt-0.5 text-[var(--link)]" /> {req}</li>
                 ))}
               </ul>
             </div>

@@ -8,6 +8,7 @@ const config: Config = {
     './lib/**/*.{js,ts,jsx,tsx,mdx}',
     './utils/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -22,7 +23,7 @@ const config: Config = {
         glow: '0 0 40px rgba(61, 148, 255, 0.35)',
       },
       backgroundImage: {
-        'hero-grid': 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0)',
+        'hero-grid': 'radial-gradient(circle at 1px 1px, var(--grid-dot) 1px, transparent 0)',
       },
     },
   },

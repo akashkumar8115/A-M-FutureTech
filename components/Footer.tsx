@@ -4,6 +4,7 @@ import { Logo } from '@/components/Logo';
 const companyLinks = [
   { href: '/about', label: 'About Us' },
   { href: '/services', label: 'Services' },
+  { href: '/blogs', label: 'Blogs' },
   { href: '/portfolio', label: 'Portfolio' },
   { href: '/careers', label: 'Careers' },
   { href: '/contact', label: 'Contact' },
@@ -13,6 +14,8 @@ const legalLinks = [
   { href: '/privacy-policy', label: 'Privacy Policy' },
   { href: '/terms', label: 'Terms & Conditions' },
   { href: '/cookie-policy', label: 'Cookie Policy' },
+  { href: '/refund-policy', label: 'Refund Policy' },
+  { href: '/disclaimer', label: 'Disclaimer' },
 ];
 
 const socials = [
@@ -25,24 +28,24 @@ const socials = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-slate-800 bg-slate-950">
+    <footer className="border-t border-[var(--border)] bg-[var(--bg-2)]">
       <div className="container py-16">
         <div className="grid gap-10 md:grid-cols-2 xl:grid-cols-5">
           <div className="xl:col-span-2">
             <div className="flex flex-wrap items-center gap-4">
               <Logo />
               <div>
-                <p className="font-semibold text-white">A&amp;M FutureTech Solutions Pvt. Ltd.</p>
-                <p className="mt-1 text-sm tracking-[0.16em] text-cyan-300">Innovate | Integrate | Elevate</p>
+                <p className="font-semibold text-[var(--text)]">A&amp;M FutureTech Solutions Pvt. Ltd.</p>
+                <p className="mt-1 text-sm tracking-[0.16em] text-[var(--link)]">Innovate | Integrate | Elevate</p>
               </div>
             </div>
-            <p className="mt-5 max-w-md text-slate-300">
+            <p className="mt-5 max-w-md text-[var(--text-soft)]">
               We build secure, scalable, high-performance digital products for businesses ready to grow with modern technology.
             </p>
           </div>
           <div>
-            <h3 className="text-lg font-bold text-white">Company</h3>
-            <ul className="mt-4 space-y-3 text-slate-300">
+            <h3 className="text-lg font-bold text-[var(--text)]">Company</h3>
+            <ul className="mt-4 space-y-3 text-[var(--text-soft)]">
               {companyLinks.map((link) => (
                 <li key={link.href}>
                   <Link href={link.href}>{link.label}</Link>
@@ -51,8 +54,8 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-bold text-white">Services</h3>
-            <ul className="mt-4 space-y-3 text-slate-300">
+            <h3 className="text-lg font-bold text-[var(--text)]">Services</h3>
+            <ul className="mt-4 space-y-3 text-[var(--text-soft)]">
               <li>Software Development</li>
               <li>Web Development</li>
               <li>Mobile App Development</li>
@@ -62,16 +65,16 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-bold text-white">Contact</h3>
-            <ul className="mt-4 space-y-3 text-slate-300">
+            <h3 className="text-lg font-bold text-[var(--text)]">Contact</h3>
+            <ul className="mt-4 space-y-3 text-[var(--text-soft)]">
               <li>A&amp;M FutureTech Solution Pvt Ltd</li>
               <li>
-                <a href="mailto:info@amfuturetech.com" className="text-cyan-300">
+                <a href="mailto:info@amfuturetech.com" className="text-[var(--link)]">
                   info@amfuturetech.com
                 </a>
               </li>
             </ul>
-            <div className="mt-5 flex gap-3 text-white">
+            <div className="mt-5 flex gap-3 text-[var(--text)]">
               {socials.map((platform) => (
                 <a
                   key={platform.label}
@@ -79,7 +82,7 @@ export function Footer() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={platform.label}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-700 bg-slate-900 text-xs font-bold"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--chip)] text-xs font-bold"
                 >
                   {platform.label[0]}
                 </a>
@@ -88,7 +91,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-4 border-t border-slate-800 pt-6 text-sm text-slate-400 md:flex-row md:items-center md:justify-between">
+        <div className="mt-12 flex flex-col gap-4 border-t border-[var(--border)] pt-6 text-sm text-[var(--text-soft)] md:flex-row md:items-center md:justify-between">
           <div className="flex flex-wrap gap-4">
             {legalLinks.map((link) => (
               <Link key={link.href} href={link.href}>

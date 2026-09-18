@@ -18,6 +18,7 @@ export const siteConfig = {
     { label: 'Portfolio', href: '/portfolio' },
     { label: 'Technologies', href: '/technologies' },
     { label: 'Industries', href: '/industries' },
+    { label: 'Blogs', href: '/blogs' },
     { label: 'Careers', href: '/careers' },
     { label: 'Contact Us', href: '/contact' },
   ],

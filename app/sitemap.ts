@@ -1,20 +1,30 @@
 import type { MetadataRoute } from 'next';
+import { getBlogs } from '@/lib/blogs';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  const blogs = await getBlogs();
+
+  const staticRoutes = [
+    '',
+    '/about',
+    '/services',
+    '/solutions',
+    '/portfolio',
+    '/technologies',
+    '/industries',
+    '/blogs',
+    '/careers',
+    '/contact',
+    '/privacy-policy',
+    '/terms',
+    '/cookie-policy',
+    '/refund-policy',
+    '/disclaimer',
+  ];
 
   return [
-    { url: `${baseUrl}/`, lastModified: new Date() },
-    { url: `${baseUrl}/about`, lastModified: new Date() },
-    { url: `${baseUrl}/services`, lastModified: new Date() },
-    { url: `${baseUrl}/solutions`, lastModified: new Date() },
-    { url: `${baseUrl}/portfolio`, lastModified: new Date() },
-    { url: `${baseUrl}/technologies`, lastModified: new Date() },
-    { url: `${baseUrl}/industries`, lastModified: new Date() },
-    { url: `${baseUrl}/careers`, lastModified: new Date() },
-    { url: `${baseUrl}/contact`, lastModified: new Date() },
-    { url: `${baseUrl}/privacy-policy`, lastModified: new Date() },
-    { url: `${baseUrl}/terms`, lastModified: new Date() },
-    { url: `${baseUrl}/cookie-policy`, lastModified: new Date() },
+    ...staticRoutes.map((path) => ({ url: `${baseUrl}${path || '/'}`, lastModified: new Date() })),
+    ...blogs.map((post) => ({ url: `${baseUrl}/blogs/${post.slug}`, lastModified: new Date(post.publishedAt) })),
   ];
 }

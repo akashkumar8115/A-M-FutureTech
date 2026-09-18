@@ -11,14 +11,14 @@ export default function IndustriesPage() {
         </div>
       </section>
 
-      <section className="section-shell bg-slate-950/40">
+      <section className="section-shell surface-alt">
         <div className="container grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {siteConfig.industries.map((industry) => (
-            <div key={industry} className="card-panel p-6 text-center text-slate-200">
-              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/20 to-violet-500/20 text-cyan-300">
+            <div key={industry} className="card-panel p-6 text-center text-[var(--text)]">
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/20 to-violet-500/20 text-[var(--link)]">
                 <CheckCircle2 size={22} />
               </div>
-              <p className="text-lg font-semibold text-white">{industry}</p>
+              <p className="text-lg font-semibold text-[var(--text)]">{industry}</p>
             </div>
           ))}
         </div>

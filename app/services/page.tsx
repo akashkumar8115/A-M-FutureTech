@@ -14,18 +14,18 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <section className="section-shell bg-slate-950/40">
+      <section className="section-shell surface-alt">
         <div className="container grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {siteConfig.serviceCards.map((service) => (
             <article key={service.title} className="card-panel p-6">
-              <h2 className="text-2xl font-bold text-white">{service.title}</h2>
-              <p className="mt-4 text-slate-300">{service.description}</p>
-              <ul className="mt-5 space-y-2 text-sm text-slate-200">
+              <h2 className="text-2xl font-bold text-[var(--text)]">{service.title}</h2>
+              <p className="mt-4 text-[var(--text-soft)]">{service.description}</p>
+              <ul className="mt-5 space-y-2 text-sm text-[var(--text)]">
                 {service.features.slice(0, 4).map((feature) => (
-                  <li key={feature} className="flex items-center gap-2"><ChevronRight size={14} className="text-blue-300" /> {feature}</li>
+                  <li key={feature} className="flex items-center gap-2"><ChevronRight size={14} className="text-[var(--link)]" /> {feature}</li>
                 ))}
               </ul>
-              <a href="/#contact" className="mt-6 inline-flex items-center gap-2 font-semibold text-cyan-300">
+              <a href="/#contact" className="mt-6 inline-flex items-center gap-2 font-semibold text-[var(--link)]">
                 Learn More <ArrowRight size={16} />
               </a>
             </article>
