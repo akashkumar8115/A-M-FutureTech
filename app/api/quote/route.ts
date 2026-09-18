@@ -1,71 +1,109 @@
 import { NextResponse } from 'next/server';
-import { sendEmail } from '@/lib/email';
+import {
+  buildConfirmationEmail,
+  buildNotificationEmail,
+  getEmailErrorMessage,
+  getRecipient,
+  sendConfirmationEmail,
+  sendEmail,
+} from '@/lib/email';
+import { jsonError, jsonSuccess, readJsonBody } from '@/lib/api';
 import { validateEmail, validatePhone, validateRequired } from '@/lib/validation';
+
+export const runtime = 'nodejs';
+export const maxDuration = 30;
+
+type QuotePayload = {
+  fullName?: string;
+  email?: string;
+  phone?: string;
+  companyName?: string;
+  serviceRequired?: string;
+  projectBudget?: string;
+  projectDetails?: string;
+};
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { fullName, email, phone, serviceRequired, projectDetails } = body;
+    const body = await readJsonBody<QuotePayload>(request);
+
+    if (!body) {
+      return jsonError('Invalid request body.');
+    }
+
+    const { fullName, email, phone, companyName, serviceRequired, projectBudget, projectDetails } = body;
 
     if (!validateRequired(fullName || '')) {
-      return NextResponse.json({ success: false, message: 'Full name is required.' }, { status: 400 });
+      return jsonError('Full name is required.');
     }
 
     if (!validateRequired(email || '')) {
-      return NextResponse.json({ success: false, message: 'Email is required.' }, { status: 400 });
+      return jsonError('Email is required.');
     }
 
-    if (!validateEmail(email)) {
-      return NextResponse.json({ success: false, message: 'Please enter a valid email address.' }, { status: 400 });
+    if (!validateEmail(email || '')) {
+      return jsonError('Please enter a valid email address.');
     }
 
     if (phone && !validatePhone(phone)) {
-      return NextResponse.json({ success: false, message: 'Phone number is too short.' }, { status: 400 });
+      return jsonError('Phone number is too short.');
     }
 
     if (!validateRequired(serviceRequired || '')) {
-      return NextResponse.json({ success: false, message: 'Service is required.' }, { status: 400 });
+      return jsonError('Service is required.');
     }
 
     if (!validateRequired(projectDetails || '')) {
-      return NextResponse.json({ success: false, message: 'Project details are required.' }, { status: 400 });
+      return jsonError('Project details are required.');
     }
 
-    const recipient = process.env.CONTACT_RECEIVER || process.env.EMAIL_TO || 'info@amfuturetech.com';
+    const recipient = getRecipient();
+    const notification = buildNotificationEmail({
+      title: 'New A&M FutureTech quote request',
+      fields: [
+        ['Full Name', fullName || ''],
+        ['Email', email || ''],
+        ['Phone', phone || 'Not provided'],
+        ['Company', companyName || 'Not provided'],
+        ['Service Required', serviceRequired || ''],
+        ['Project Budget', projectBudget || 'Not provided'],
+      ],
+      messageLabel: 'Project Details',
+      message: projectDetails,
+    });
 
     await sendEmail({
       to: recipient,
       replyTo: email,
       subject: `Quote request from ${fullName}`,
-      html: `
-        <h2>New A&M FutureTech quote request</h2>
-        <p><strong>Full Name:</strong> ${fullName}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone || 'Not provided'}</p>
-        <p><strong>Service Required:</strong> ${serviceRequired}</p>
-        <p><strong>Project Details:</strong></p>
-        <p>${projectDetails}</p>
-      `,
-      text: [
-        'New A&M FutureTech quote request',
-        `Full Name: ${fullName}`,
-        `Email: ${email}`,
-        `Phone: ${phone || 'Not provided'}`,
-        `Service Required: ${serviceRequired}`,
-        '',
-        'Project Details:',
-        projectDetails,
-      ].join('\n'),
+      html: notification.html,
+      text: notification.text,
+      tags: [{ name: 'form', value: 'quote' }],
     });
 
-    console.log('Quote request received', { fullName, email, phone, serviceRequired, projectDetails });
-
-    return NextResponse.json({
-      success: true,
-      message: 'Your quote request has been submitted successfully.',
+    const confirmation = buildConfirmationEmail({
+      title: 'We received your quote request',
+      intro: 'Thank you for requesting a quote from A&M FutureTech. Our team will review the details and share a response shortly.',
+      fields: [
+        ['Name', fullName || ''],
+        ['Service', serviceRequired || ''],
+      ],
     });
+
+    await sendConfirmationEmail({
+      to: email || '',
+      subject: 'We received your quote request | A&M FutureTech',
+      html: confirmation.html,
+      text: confirmation.text,
+      tags: [{ name: 'form', value: 'quote-confirmation' }],
+    });
+
+    return jsonSuccess('Your quote request has been submitted successfully.');
   } catch (error) {
-    console.error('Quote route error', error);
-    return NextResponse.json({ success: false, message: 'Unable to submit quote request right now.' }, { status: 500 });
+    console.error('[api/quote] Quote route error', error);
+    return NextResponse.json(
+      { success: false, message: getEmailErrorMessage(error) || 'Unable to submit quote request right now.' },
+      { status: 500 },
+    );
   }
 }

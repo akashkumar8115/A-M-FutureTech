@@ -1,6 +1,33 @@
 import { NextResponse } from 'next/server';
-import { sendEmail } from '@/lib/email';
+import {
+  buildConfirmationEmail,
+  buildNotificationEmail,
+  getEmailErrorMessage,
+  getRecipient,
+  sendConfirmationEmail,
+  sendEmail,
+} from '@/lib/email';
+import { jsonError, jsonSuccess } from '@/lib/api';
 import { validateEmail, validatePhone, validateRequired } from '@/lib/validation';
+
+export const runtime = 'nodejs';
+export const maxDuration = 30;
+
+const MAX_RESUME_BYTES = 5 * 1024 * 1024;
+const ALLOWED_RESUME_TYPES = [
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+];
+const ALLOWED_RESUME_EXTENSIONS = ['.pdf', '.doc', '.docx'];
+
+function isAllowedResume(file: File) {
+  const name = file.name.toLowerCase();
+  const hasAllowedExtension = ALLOWED_RESUME_EXTENSIONS.some((extension) => name.endsWith(extension));
+  const hasAllowedType = !file.type || ALLOWED_RESUME_TYPES.includes(file.type);
+
+  return hasAllowedExtension && hasAllowedType;
+}
 
 export async function POST(request: Request) {
   try {
@@ -14,83 +41,101 @@ export async function POST(request: Request) {
     const resume = formData.get('resume');
 
     if (!validateRequired(fullName)) {
-      return NextResponse.json({ success: false, message: 'Full name is required.' }, { status: 400 });
+      return jsonError('Full name is required.');
     }
 
     if (!validateRequired(email)) {
-      return NextResponse.json({ success: false, message: 'Email is required.' }, { status: 400 });
+      return jsonError('Email is required.');
     }
 
     if (!validateEmail(email)) {
-      return NextResponse.json({ success: false, message: 'Please enter a valid email address.' }, { status: 400 });
+      return jsonError('Please enter a valid email address.');
     }
 
     if (!validateRequired(phone)) {
-      return NextResponse.json({ success: false, message: 'Phone number is required.' }, { status: 400 });
+      return jsonError('Phone number is required.');
     }
 
     if (!validatePhone(phone)) {
-      return NextResponse.json({ success: false, message: 'Phone number is too short.' }, { status: 400 });
+      return jsonError('Phone number is too short.');
     }
 
     if (!validateRequired(position)) {
-      return NextResponse.json({ success: false, message: 'Position is required.' }, { status: 400 });
+      return jsonError('Position is required.');
     }
 
     if (!validateRequired(experience)) {
-      return NextResponse.json({ success: false, message: 'Experience is required.' }, { status: 400 });
+      return jsonError('Experience is required.');
     }
 
-    const recipient = process.env.CONTACT_RECEIVER || process.env.EMAIL_TO || 'info@amfuturetech.com';
-    const resumeFile = resume instanceof File ? resume : null;
-    const resumeFileName = resumeFile ? resumeFile.name : null;
+    const resumeFile = resume instanceof File && resume.size > 0 ? resume : null;
 
-    const attachments = resumeFile
-      ? [{
-          filename: resumeFile.name,
-          content: Buffer.from(await resumeFile.arrayBuffer()),
-          contentType: resumeFile.type || 'application/octet-stream',
-        }]
-      : undefined;
+    if (!resumeFile) {
+      return jsonError('Resume is required.');
+    }
+
+    if (!isAllowedResume(resumeFile)) {
+      return jsonError('Please upload a PDF or Word document.');
+    }
+
+    if (resumeFile.size > MAX_RESUME_BYTES) {
+      return jsonError('Resume must be 5MB or smaller.');
+    }
+
+    const recipient = getRecipient();
+    const notification = buildNotificationEmail({
+      title: 'New A&M FutureTech job application',
+      fields: [
+        ['Full Name', fullName],
+        ['Email', email],
+        ['Phone', phone],
+        ['Position', position],
+        ['Experience', experience],
+        ['Resume', resumeFile.name],
+      ],
+      messageLabel: 'Message',
+      message: message || 'No additional message.',
+    });
 
     await sendEmail({
       to: recipient,
       replyTo: email,
       subject: `Career application: ${position}`,
-      html: `
-        <h2>New A&M FutureTech job application</h2>
-        <p><strong>Full Name:</strong> ${fullName}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone}</p>
-        <p><strong>Position:</strong> ${position}</p>
-        <p><strong>Experience:</strong> ${experience}</p>
-        <p><strong>Resume:</strong> ${resumeFileName || 'Not uploaded'}</p>
-        <p><strong>Message:</strong></p>
-        <p>${message || 'No additional message.'}</p>
-      `,
-      text: [
-        'New A&M FutureTech job application',
-        `Full Name: ${fullName}`,
-        `Email: ${email}`,
-        `Phone: ${phone}`,
-        `Position: ${position}`,
-        `Experience: ${experience}`,
-        `Resume: ${resumeFileName || 'Not uploaded'}`,
-        '',
-        'Message:',
-        message || 'No additional message.',
-      ].join('\n'),
-      attachments,
+      html: notification.html,
+      text: notification.text,
+      attachments: [
+        {
+          filename: resumeFile.name,
+          content: Buffer.from(await resumeFile.arrayBuffer()),
+          contentType: resumeFile.type || 'application/octet-stream',
+        },
+      ],
+      tags: [{ name: 'form', value: 'careers' }],
     });
 
-    console.log('Career application received', { fullName, email, phone, position, experience, message, resumeFileName });
-
-    return NextResponse.json({
-      success: true,
-      message: 'Your application has been submitted successfully.',
+    const confirmation = buildConfirmationEmail({
+      title: 'We received your application',
+      intro: 'Thank you for applying to A&M FutureTech. Our hiring team will review your profile and contact you if there is a match.',
+      fields: [
+        ['Name', fullName],
+        ['Position', position],
+      ],
     });
+
+    await sendConfirmationEmail({
+      to: email,
+      subject: `We received your application for ${position} | A&M FutureTech`,
+      html: confirmation.html,
+      text: confirmation.text,
+      tags: [{ name: 'form', value: 'careers-confirmation' }],
+    });
+
+    return jsonSuccess('Your application has been submitted successfully.');
   } catch (error) {
-    console.error('Career route error', error);
-    return NextResponse.json({ success: false, message: 'Unable to submit your application right now.' }, { status: 500 });
+    console.error('[api/careers] Career route error', error);
+    return NextResponse.json(
+      { success: false, message: getEmailErrorMessage(error) || 'Unable to submit your application right now.' },
+      { status: 500 },
+    );
   }
 }

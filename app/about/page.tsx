@@ -1,24 +1,15 @@
-import { Header } from '@/components/Header';
 import { siteConfig } from '@/lib/site-data';
 import { CheckCircle2 } from 'lucide-react';
-import Image from 'next/image';
+import { Logo } from '@/components/Logo';
 
 export default function AboutPage() {
   return (
     <main>
-      <Header />
       <section className="section-shell">
         <div className="container max-w-5xl">
           <div className="grid items-center gap-8 md:grid-cols-[auto_1fr]">
-            <div className="flex h-36 w-36 items-center justify-center rounded-2xl border border-white/10 bg-white p-3 shadow-lg shadow-slate-950/20">
-              <Image
-                src="/images/company-logo.png"
-                alt="A&M FutureTech Solutions Pvt. Ltd. Logo"
-                width="891"
-                height="891"
-                sizes="144px"
-                className="h-full w-full object-contain"
-              />
+            <div className="flex h-36 w-36 items-center justify-center rounded-2xl border border-white/10 bg-slate-950 p-3 shadow-lg shadow-slate-950/20">
+              <Logo />
             </div>
             <div>
               <span className="badge">About us</span>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 
 const initialState = {
   fullName: '',
@@ -12,6 +12,14 @@ const initialState = {
   projectDetails: '',
 };
 
+async function readApiResponse(response: Response) {
+  try {
+    return await response.json();
+  } catch {
+    return { success: false, message: 'Unable to send enquiry.' };
+  }
+}
+
 export function ContactForm() {
   const [form, setForm] = useState(initialState);
   const [status, setStatus] = useState<{ type: 'idle' | 'success' | 'error'; message: string }>({ type: 'idle', message: '' });
@@ -21,7 +29,7 @@ export function ContactForm() {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSubmitting(true);
     setStatus({ type: 'idle', message: '' });
@@ -32,7 +40,7 @@ export function ContactForm() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       });
-      const result = await response.json();
+      const result = await readApiResponse(response);
 
       if (!response.ok || result.success === false) {
         throw new Error(result.message || 'Unable to send enquiry.');
@@ -90,7 +98,9 @@ export function ContactForm() {
         {isSubmitting ? 'Sending...' : 'Send Enquiry'}
       </button>
       {status.type !== 'idle' && (
-        <p className={status.type === 'success' ? 'mt-4 text-sm text-emerald-400' : 'mt-4 text-sm text-red-400'}>{status.message}</p>
+        <p className={status.type === 'success' ? 'mt-4 text-sm text-emerald-400' : 'mt-4 text-sm text-red-400'} role="status">
+          {status.message}
+        </p>
       )}
     </form>
   );

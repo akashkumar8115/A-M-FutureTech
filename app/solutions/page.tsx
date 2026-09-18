@@ -1,11 +1,9 @@
-import { Header } from '@/components/Header';
 import { siteConfig } from '@/lib/site-data';
 import { ArrowRight } from 'lucide-react';
 
 export default function SolutionsPage() {
   return (
     <main>
-      <Header />
       <section className="section-shell">
         <div className="container text-center">
           <span className="badge">Business solutions</span>

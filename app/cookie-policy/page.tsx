@@ -1,9 +1,6 @@
-import { Header } from '@/components/Header';
-
 export default function CookiePolicyPage() {
   return (
     <main>
-      <Header />
       <section className="section-shell">
         <div className="container max-w-4xl">
           <span className="badge">Cookie policy</span>

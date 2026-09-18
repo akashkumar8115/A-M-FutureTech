@@ -13,5 +13,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/industries`, lastModified: new Date() },
     { url: `${baseUrl}/careers`, lastModified: new Date() },
     { url: `${baseUrl}/contact`, lastModified: new Date() },
+    { url: `${baseUrl}/privacy-policy`, lastModified: new Date() },
+    { url: `${baseUrl}/terms`, lastModified: new Date() },
+    { url: `${baseUrl}/cookie-policy`, lastModified: new Date() },
   ];
 }

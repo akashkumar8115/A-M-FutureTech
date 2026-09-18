@@ -22,7 +22,7 @@ export const siteConfig = {
     { label: 'Contact Us', href: '/contact' },
   ],
   stats: [
-    { label: 'Projects Completed', value: '150+', suffix: '+' },
+    { label: 'Projects Completed', value: '150', suffix: '+' },
     { label: 'Happy Clients', value: '90', suffix: '%' },
     { label: 'Technologies Used', value: '25', suffix: '+' },
     { label: 'Support & Innovation', value: '24/7', suffix: '' },

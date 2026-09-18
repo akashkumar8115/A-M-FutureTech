@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { FormEvent, useId, useRef, useState } from 'react';
 
 const initialState = {
   fullName: '',
@@ -11,33 +11,63 @@ const initialState = {
   message: '',
 };
 
+const MAX_RESUME_BYTES = 5 * 1024 * 1024;
+const ALLOWED_RESUME_EXTENSIONS = ['.pdf', '.doc', '.docx'];
+
+async function readApiResponse(response: Response) {
+  try {
+    return await response.json();
+  } catch {
+    return { success: false, message: 'Unable to submit application.' };
+  }
+}
+
+function isAllowedResume(file: File) {
+  const name = file.name.toLowerCase();
+  return ALLOWED_RESUME_EXTENSIONS.some((extension) => name.endsWith(extension));
+}
+
 export function CareerForm() {
   const [form, setForm] = useState(initialState);
   const [status, setStatus] = useState<{ type: 'idle' | 'success' | 'error'; message: string }>({ type: 'idle', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [resumeName, setResumeName] = useState('');
+  const resumeInputRef = useRef<HTMLInputElement | null>(null);
+  const resumeInputId = useId();
 
   const handleChange = (field: keyof typeof initialState, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSubmitting(true);
     setStatus({ type: 'idle', message: '' });
 
     try {
+      const file = resumeInputRef.current?.files?.[0];
+
+      if (!file) {
+        throw new Error('Please upload your resume.');
+      }
+
+      if (!isAllowedResume(file)) {
+        throw new Error('Please upload a PDF or Word document.');
+      }
+
+      if (file.size > MAX_RESUME_BYTES) {
+        throw new Error('Resume must be 5MB or smaller.');
+      }
+
       const data = new FormData();
       Object.entries(form).forEach(([key, value]) => data.append(key, value));
-      const input = document.getElementById('resume') as HTMLInputElement | null;
-      const file = input?.files?.[0];
-      if (file) data.append('resume', file);
+      data.append('resume', file);
 
       const response = await fetch('/api/careers', {
         method: 'POST',
         body: data,
       });
-      const result = await response.json();
+      const result = await readApiResponse(response);
 
       if (!response.ok || result.success === false) {
         throw new Error(result.message || 'Unable to submit application.');
@@ -46,7 +76,9 @@ export function CareerForm() {
       setStatus({ type: 'success', message: result.message || 'Application sent successfully.' });
       setForm(initialState);
       setResumeName('');
-      if (input) input.value = '';
+      if (resumeInputRef.current) {
+        resumeInputRef.current.value = '';
+      }
     } catch (error) {
       setStatus({ type: 'error', message: error instanceof Error ? error.message : 'Unable to submit application.' });
     } finally {
@@ -55,7 +87,7 @@ export function CareerForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="form-shell p-6 sm:p-8" encType="multipart/form-data">
+    <form onSubmit={handleSubmit} className="form-shell p-6 sm:p-8">
       <div className="grid gap-5 md:grid-cols-2">
         <div className="field-wrap text-sm text-slate-200">
           <label htmlFor="career-name">Full Name</label>
@@ -87,11 +119,13 @@ export function CareerForm() {
           <textarea id="career-message" value={form.message} onChange={(e) => handleChange('message', e.target.value)} rows={5} placeholder="Tell us a bit about yourself and why you'd like to join the team." />
         </div>
         <div className="field-wrap text-sm text-slate-200 md:col-span-2">
-          <label htmlFor="resume">Resume Upload</label>
+          <label htmlFor={resumeInputId}>Resume Upload</label>
           <input
-            id="resume"
+            id={resumeInputId}
+            ref={resumeInputRef}
             type="file"
-            accept=".pdf,.doc,.docx"
+            accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            required
             onChange={(e) => setResumeName(e.target.files?.[0]?.name || '')}
             className="block w-full rounded-xl border border-dashed border-slate-600 bg-slate-900/80 px-4 py-3 text-white"
           />
@@ -102,7 +136,9 @@ export function CareerForm() {
         {isSubmitting ? 'Submitting...' : 'Apply Now'}
       </button>
       {status.type !== 'idle' && (
-        <p className={status.type === 'success' ? 'mt-4 text-sm text-emerald-400' : 'mt-4 text-sm text-red-400'}>{status.message}</p>
+        <p className={status.type === 'success' ? 'mt-4 text-sm text-emerald-400' : 'mt-4 text-sm text-red-400'} role="status">
+          {status.message}
+        </p>
       )}
     </form>
   );

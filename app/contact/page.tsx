@@ -1,10 +1,8 @@
-import { Header } from '@/components/Header';
 import { ContactForm } from '@/components/ContactForm';
 
 export default function ContactPage() {
   return (
     <main>
-      <Header />
       <section className="section-shell">
         <div className="container text-center">
           <span className="badge">Contact</span>

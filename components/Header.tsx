@@ -18,25 +18,26 @@ export function Header() {
 
         <nav className="hidden items-center gap-7 text-sm font-medium text-slate-200 lg:flex">
           {siteConfig.navItems.map((item) => (
-            <a
+            <Link
               key={item.href}
               href={item.href}
               className="relative px-1 py-1.5 text-slate-200 transition duration-200 hover:text-white after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-gradient-to-r after:from-blue-400 after:to-cyan-300 after:transition-all after:duration-200 hover:after:w-full"
             >
               {item.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
         <div className="hidden items-center gap-4 lg:flex">
-          <a href="/#quote" className="secondary-btn !px-5 !py-3 !text-sm">
+          <Link href="/#quote" className="secondary-btn !px-5 !py-3 !text-sm">
             Get a Quote
-          </a>
+          </Link>
         </div>
 
         <button
           type="button"
-          aria-label="Toggle menu"
+          aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={mobileOpen}
           onClick={() => setMobileOpen((state) => !state)}
           className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white shadow-lg shadow-slate-950/30 transition hover:border-blue-400/40 hover:bg-slate-900/90 lg:hidden"
         >
@@ -45,22 +46,22 @@ export function Header() {
       </div>
 
       <div
-        className={`overflow-hidden border-t border-white/10 bg-slate-950/90 transition-all duration-300 ease-out lg:hidden ${mobileOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+        className={`overflow-hidden overflow-y-auto border-t border-white/10 bg-slate-950/90 transition-all duration-300 ease-out lg:hidden ${mobileOpen ? 'max-h-[min(32rem,80vh)] opacity-100' : 'max-h-0 opacity-0'}`}
       >
         <nav className="container flex flex-col gap-2 py-4 text-sm text-slate-100">
           {siteConfig.navItems.map((item) => (
-            <a
+            <Link
               key={item.href}
               href={item.href}
               onClick={() => setMobileOpen(false)}
               className="rounded-xl px-3 py-3 transition hover:bg-white/5 hover:text-blue-200"
             >
               {item.label}
-            </a>
+            </Link>
           ))}
-          <a href="/#quote" onClick={() => setMobileOpen(false)} className="primary-btn mt-2 !w-full">
+          <Link href="/#quote" onClick={() => setMobileOpen(false)} className="primary-btn mt-2 !w-full">
             Get a Quote
-          </a>
+          </Link>
         </nav>
       </div>
     </header>

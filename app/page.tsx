@@ -1,19 +1,16 @@
 import Link from 'next/link';
 import { ArrowRight, CheckCircle2, ChevronRight, Cloud, Code2, Cpu, Database, Globe, Headphones, LayoutDashboard, MonitorSmartphone, ShieldCheck, Sparkles, Users } from 'lucide-react';
-import { Logo } from '@/components/Logo';
-import { Header } from '@/components/Header';
 import { siteConfig } from '@/lib/site-data';
 import { ContactForm } from '@/components/ContactForm';
 import { QuoteForm } from '@/components/QuoteForm';
 import { CareerForm } from '@/components/CareerForm';
+import { PortfolioGrid } from '@/components/PortfolioGrid';
 
 const serviceIcons = [Code2, Globe, MonitorSmartphone, LayoutDashboard, Sparkles, Cloud, Database, ShieldCheck, Users, Headphones];
 
 export default function HomePage() {
   return (
     <main>
-      <Header />
-
       <section id="home" className="hero-shell relative overflow-hidden border-b border-white/10">
         <div className="absolute inset-0 bg-hero-grid bg-[size:22px_22px] opacity-20" />
         <div className="container relative grid min-h-[740px] items-center gap-12 py-20 lg:grid-cols-[1.08fr_0.92fr]">
@@ -163,9 +160,9 @@ export default function HomePage() {
                       </li>
                     ))}
                   </ul>
-                  <button className="mt-7 inline-flex items-center gap-2 font-semibold text-cyan-300 transition hover:text-white">
+                  <Link href="/services" className="mt-7 inline-flex items-center gap-2 font-semibold text-cyan-300 transition hover:text-white">
                     Learn More <ArrowRight size={16} />
-                  </button>
+                  </Link>
                 </article>
               );
             })}
@@ -322,34 +319,7 @@ export default function HomePage() {
             <h2 className="section-title mx-auto mt-6 max-w-3xl">Our Work</h2>
           </div>
 
-          <div className="mt-10 flex flex-wrap justify-center gap-3">
-            {['Software Development', 'Web Development', 'Mobile Applications', 'ERP Solutions', 'E-Commerce'].map((filter) => (
-              <button key={filter} className="rounded-full border border-slate-700 bg-slate-900 px-4 py-2 text-sm text-slate-200 transition hover:border-blue-500 hover:text-blue-200">
-                {filter}
-              </button>
-            ))}
-          </div>
-
-          <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {siteConfig.portfolio.map((project) => (
-              <article key={project.title} className="card-panel overflow-hidden">
-                <div className="h-56 w-full bg-gradient-to-br from-blue-500/50 via-slate-900 to-violet-500/40" />
-                <div className="p-6">
-                  <span className="text-xs uppercase tracking-[0.2em] text-cyan-300">{project.category}</span>
-                  <h3 className="mt-3 text-2xl font-bold text-white">{project.title}</h3>
-                  <p className="mt-3 text-slate-300">{project.description}</p>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {project.technologies.map((tech) => (
-                      <span key={tech} className="rounded-full bg-slate-800 px-2.5 py-1 text-xs text-slate-200">{tech}</span>
-                    ))}
-                  </div>
-                  <button className="mt-6 inline-flex items-center gap-2 font-semibold text-cyan-300">
-                    View Details <ArrowRight size={16} />
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
+          <PortfolioGrid />
         </div>
       </section>
 
@@ -391,7 +361,7 @@ export default function HomePage() {
               </div>
               <div className="flex flex-wrap gap-4">
                 <a href="#contact" className="primary-btn">Get Free Consultation</a>
-                <a href="#contact" className="secondary-btn">Request a Quote</a>
+                <a href="#quote" className="secondary-btn">Request a Quote</a>
               </div>
             </div>
           </div>
@@ -414,73 +384,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      <footer className="border-t border-slate-800 bg-slate-950">
-        <div className="container py-16">
-          <div className="grid gap-10 md:grid-cols-2 xl:grid-cols-5">
-            <div className="xl:col-span-2">
-              <div className="flex flex-wrap items-center gap-4">
-                <Logo />
-                <div>
-                  <p className="font-semibold text-white">A&amp;M FutureTech Solutions Pvt. Ltd.</p>
-                  <p className="mt-1 text-sm tracking-[0.16em] text-cyan-300">Innovate | Integrate | Elevate</p>
-                </div>
-              </div>
-              <p className="mt-5 max-w-md text-slate-300">
-                We build secure, scalable, high-performance digital products for businesses ready to grow with modern technology.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-white">Company</h3>
-              <ul className="mt-4 space-y-3 text-slate-300">
-                <li><a href="/about">About Us</a></li>
-                <li><a href="/services">Services</a></li>
-                <li><a href="/portfolio">Portfolio</a></li>
-                <li><a href="/careers">Careers</a></li>
-                <li><a href="/contact">Contact</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-white">Services</h3>
-              <ul className="mt-4 space-y-3 text-slate-300">
-                <li>Software Development</li>
-                <li>Web Development</li>
-                <li>Mobile App Development</li>
-                <li>UI/UX Design</li>
-                <li>Cloud Solutions</li>
-                <li>IT Consulting</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-white">Contact</h3>
-              <ul className="mt-4 space-y-3 text-slate-300">
-                <li>A&M FutureTech Solution Pvt Ltd</li>
-                <li><a href="mailto:info@amfuturetech.com" className="text-cyan-300">info@amfuturetech.com</a></li>
-              </ul>
-              <div className="mt-5 flex gap-3 text-white">
-                {[
-                  { label: 'LinkedIn', href: 'https://www.linkedin.com' },
-                  { label: 'Facebook', href: 'https://www.facebook.com' },
-                  { label: 'Instagram', href: 'https://www.instagram.com' },
-                  { label: 'X', href: 'https://x.com' },
-                  { label: 'YouTube', href: 'https://www.youtube.com' },
-                ].map((platform) => (
-                  <a key={platform.label} href={platform.href} target="_blank" rel="noreferrer" className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-700 bg-slate-900 text-xs font-bold">{platform.label[0]}</a>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-12 flex flex-col gap-4 border-t border-slate-800 pt-6 text-sm text-slate-400 md:flex-row md:items-center md:justify-between">
-            <div className="flex flex-wrap gap-4">
-              <a href="/privacy-policy">Privacy Policy</a>
-              <a href="/terms">Terms & Conditions</a>
-              <a href="/cookie-policy">Cookie Policy</a>
-            </div>
-            <div>© 2026 A&M FutureTech Solution Pvt Ltd. All Rights Reserved.</div>
-          </div>
-        </div>
-      </footer>
     </main>
   );
 }

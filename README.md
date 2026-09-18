@@ -7,7 +7,7 @@ A premium IT company website built with Next.js, TypeScript, and Tailwind CSS.
 - Responsive multi-page marketing site
 - Working CTA navigation and forms
 - Structured content architecture for services, portfolio and careers
-- API-ready form endpoints and validation layer
+- Resend-powered contact, quote, and career emails
 - Database-ready Prisma setup
 
 ## Run locally
@@ -24,12 +24,17 @@ Open http://localhost:3000.
 Set environment variables in a `.env.local` file:
 
 ```bash
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_SITE_URL=https://amfuturetech.com
+RESEND_API_KEY=re_xxxxxxxx
+EMAIL_FROM="A&M FutureTech <info@amfuturetech.com>"
 EMAIL_TO=info@amfuturetech.com
-SMTP_HOST=
-SMTP_PORT=587
-SMTP_USER=
-SMTP_PASSWORD=
-SMTP_FROM=
+CONTACT_RECEIVER=info@amfuturetech.com
 DATABASE_URL="mysql://user:pass@localhost:3306/amfuturetech"
 ```
+
+### Resend setup
+
+1. Create an API key at [Resend](https://resend.com/api-keys) and add it as `RESEND_API_KEY`.
+2. Verify `amfuturetech.com` at [Resend Domains](https://resend.com/domains).
+3. Use a verified sender in `EMAIL_FROM`, for example `A&M FutureTech <info@amfuturetech.com>`.
+4. Incoming form emails are delivered to `EMAIL_TO` / `CONTACT_RECEIVER`.

@@ -1,9 +1,6 @@
-import { Header } from '@/components/Header';
-
 export default function TechnologiesPage() {
   return (
     <main>
-      <Header />
       <section className="section-shell">
         <div className="container text-center">
           <span className="badge">Technologies</span>

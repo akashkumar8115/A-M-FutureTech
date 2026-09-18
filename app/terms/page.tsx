@@ -1,9 +1,6 @@
-import { Header } from '@/components/Header';
-
 export default function TermsPage() {
   return (
     <main>
-      <Header />
       <section className="section-shell">
         <div className="container max-w-4xl">
           <span className="badge">Terms</span>
