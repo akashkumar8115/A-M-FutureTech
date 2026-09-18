@@ -1,73 +1,135 @@
 'use client';
 
 import Link from 'next/link';
-import { Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { ChevronDown, Menu, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Logo } from '@/components/Logo';
 import { SearchModal } from '@/components/SearchModal';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { siteConfig } from '@/lib/site-data';
+import { mobileHomeLink, navItems, type NavItem } from '@/lib/navigation';
+
+function isActive(pathname: string, href: string, children?: NavItem['children']) {
+  if (href === '/') return pathname === '/';
+  if (pathname === href || pathname.startsWith(`${href}/`)) return true;
+  return children?.some((child) => pathname === child.href || pathname.startsWith(`${child.href}/`)) ?? false;
+}
 
 export function Header() {
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [openGroup, setOpenGroup] = useState<string | null>(null);
+
+  useEffect(() => {
+    setMobileOpen(false);
+    setOpenGroup(null);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!mobileOpen) return undefined;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMobileOpen(false);
+    };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [mobileOpen]);
+
+  const menuItems = [mobileHomeLink, ...navItems];
 
   return (
     <header className="site-header sticky top-0 z-50 border-b backdrop-blur-xl">
-      <div className="container flex items-center justify-between py-3.5">
-        <Link href="/" aria-label="A&M FutureTech home" className="flex items-center" onClick={() => setMobileOpen(false)}>
-          <Logo />
+      <div className="container flex items-center gap-3 py-2.5 lg:gap-4 lg:py-3">
+        <Link href="/" aria-label="A&M FutureTech home" className="shrink-0" onClick={() => setMobileOpen(false)}>
+          <Logo className="[&_svg]:h-12 [&_svg]:w-12 sm:[&_svg]:h-[3.75rem] sm:[&_svg]:w-[3.75rem] lg:[&_svg]:h-16 lg:[&_svg]:w-16" />
         </Link>
 
-        <nav className="hidden items-center gap-4 text-[13px] font-medium xl:flex xl:gap-6 xl:text-sm">
-          {siteConfig.navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="relative px-1 py-1.5 transition duration-200 after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-gradient-to-r after:from-blue-400 after:to-cyan-300 after:transition-all after:duration-200 hover:after:w-full"
-            >
-              {item.label}
-            </Link>
+        <nav className="desktop-nav ml-2 hidden min-w-0 flex-1 items-center justify-center gap-0.5 xl:gap-1.5 lg:flex" aria-label="Primary">
+          {navItems.map((item) => (
+            <div key={item.label} className={`nav-item ${['Industries', 'Work', 'Contact'].includes(item.label) ? 'nav-item-end' : ''}`}>
+              <Link
+                href={item.href}
+                className={`nav-link ${isActive(pathname, item.href, item.children) ? 'is-active' : ''}`}
+              >
+                {item.label}
+                {item.children ? <ChevronDown size={14} className="nav-caret" /> : null}
+              </Link>
+              {item.children ? (
+                <div className={`nav-panel ${item.mega ? 'nav-panel-mega' : ''}`}>
+                  {item.children.map((child) => (
+                    <Link key={child.href} href={child.href} className="nav-sublink">
+                      <span>{child.label}</span>
+                      {child.description ? <small>{child.description}</small> : null}
+                    </Link>
+                  ))}
+                </div>
+              ) : null}
+            </div>
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 md:flex">
+        <div className="ml-auto flex items-center gap-2">
           <SearchModal />
           <ThemeToggle />
-          <Link href="/#quote" className="secondary-btn !px-5 !py-3 !text-sm">
+          <Link href="/get-quote" className="secondary-btn !hidden !min-h-10 !px-3 !py-2 !text-xs sm:!inline-flex lg:!px-4 lg:!text-sm">
             Get a Quote
           </Link>
-        </div>
-
-        <div className="flex items-center gap-2 xl:hidden">
-          <div className="flex items-center gap-2 md:hidden">
-            <SearchModal />
-            <ThemeToggle />
-          </div>
           <button
             type="button"
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((state) => !state)}
-            className="icon-btn"
+            className="icon-btn lg:hidden"
           >
             {mobileOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
         </div>
       </div>
 
-      <div className={`overflow-hidden overflow-y-auto border-t transition-all duration-300 ease-out xl:hidden ${mobileOpen ? 'pointer-events-auto max-h-[min(36rem,80vh)] opacity-100' : 'pointer-events-none max-h-0 opacity-0'}`}>
-        <nav className="container flex flex-col gap-2 py-4 text-sm">
-          {siteConfig.navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setMobileOpen(false)}
-              className="rounded-xl px-3 py-3 transition hover:bg-black/5 dark:hover:bg-white/5"
-            >
-              {item.label}
-            </Link>
-          ))}
-          <Link href="/#quote" onClick={() => setMobileOpen(false)} className="primary-btn mt-2 !w-full">
+      <div className={`mobile-nav lg:hidden ${mobileOpen ? 'is-open' : ''}`}>
+        <nav className="container flex flex-col gap-1 py-3 text-sm" aria-label="Mobile">
+          {menuItems.map((item) => {
+            const expanded = openGroup === item.label;
+            if (!item.children) {
+              return (
+                <Link key={item.href} href={item.href} className="mobile-link">
+                  {item.label}
+                </Link>
+              );
+            }
+            return (
+              <div key={item.label} className="mobile-group">
+                <div className="flex items-center gap-1">
+                  <Link href={item.href} className="mobile-link flex-1">
+                    {item.label}
+                  </Link>
+                  <button
+                    type="button"
+                    className="icon-btn !h-10 !w-10 shrink-0"
+                    aria-expanded={expanded}
+                    aria-label={`${expanded ? 'Collapse' : 'Expand'} ${item.label}`}
+                    onClick={() => setOpenGroup(expanded ? null : item.label)}
+                  >
+                    <ChevronDown size={16} className={`transition ${expanded ? 'rotate-180' : ''}`} />
+                  </button>
+                </div>
+                {expanded ? (
+                  <div className="mobile-sub">
+                    {item.children.map((child) => (
+                      <Link key={child.href} href={child.href} className="mobile-sublink">
+                        {child.label}
+                      </Link>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            );
+          })}
+          <Link href="/get-quote" className="primary-btn mt-3 !w-full sm:!hidden">
             Get a Quote
           </Link>
         </nav>

@@ -3,9 +3,10 @@ import { Logo } from '@/components/Logo';
 
 const companyLinks = [
   { href: '/about', label: 'About Us' },
+  { href: '/why-us', label: 'Why Choose Us' },
+  { href: '/process', label: 'Our Process' },
   { href: '/services', label: 'Services' },
   { href: '/blogs', label: 'Blogs' },
-  { href: '/portfolio', label: 'Portfolio' },
   { href: '/careers', label: 'Careers' },
   { href: '/contact', label: 'Contact' },
 ];
@@ -56,12 +57,12 @@ export function Footer() {
           <div>
             <h3 className="text-lg font-bold text-[var(--text)]">Services</h3>
             <ul className="mt-4 space-y-3 text-[var(--text-soft)]">
-              <li>Software Development</li>
-              <li>Web Development</li>
-              <li>Mobile App Development</li>
-              <li>UI/UX Design</li>
-              <li>Cloud Solutions</li>
-              <li>IT Consulting</li>
+              <li><Link href="/services/custom-software-development">Software Development</Link></li>
+              <li><Link href="/services/website-development">Web Development</Link></li>
+              <li><Link href="/services/mobile-application-development">Mobile App Development</Link></li>
+              <li><Link href="/services/ui-ux-design">UI/UX Design</Link></li>
+              <li><Link href="/services/cloud-solutions">Cloud Solutions</Link></li>
+              <li><Link href="/services/it-consulting">IT Consulting</Link></li>
             </ul>
           </div>
           <div>

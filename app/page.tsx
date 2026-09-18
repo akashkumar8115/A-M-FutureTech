@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight, CheckCircle2, ChevronRight, Cloud, Code2, Cpu, Database, Globe, Headphones, LayoutDashboard, MonitorSmartphone, ShieldCheck, Sparkles, Users } from 'lucide-react';
 import { siteConfig } from '@/lib/site-data';
+import { industries, services, solutions } from '@/lib/catalog';
 import { ContactForm } from '@/components/ContactForm';
 import { QuoteForm } from '@/components/QuoteForm';
 import { CareerForm } from '@/components/CareerForm';
@@ -143,7 +144,7 @@ export default function HomePage() {
           </div>
 
           <div className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {siteConfig.serviceCards.map((service, index) => {
+            {services.map((service, index) => {
               const Icon = serviceIcons[index % serviceIcons.length];
               return (
                 <article key={service.title} className="group card-panel p-6 transition duration-300 hover:-translate-y-1 hover:border-blue-400/50">
@@ -151,7 +152,7 @@ export default function HomePage() {
                     <Icon size={26} />
                   </div>
                   <h3 className="text-2xl font-bold text-[var(--text)]">{service.title}</h3>
-                  <p className="mt-4 min-h-[96px] text-[var(--text-soft)]">{service.description}</p>
+                  <p className="mt-4 min-h-[96px] text-[var(--text-soft)]">{service.summary}</p>
                   <ul className="mt-5 space-y-2 text-sm text-[var(--text)]">
                     {service.features.slice(0, 3).map((feature) => (
                       <li key={feature} className="flex items-center gap-2">
@@ -160,7 +161,7 @@ export default function HomePage() {
                       </li>
                     ))}
                   </ul>
-                  <Link href="/services" className="mt-7 inline-flex items-center gap-2 font-semibold text-[var(--link)] transition hover:underline">
+                  <Link href={service.href} className="mt-7 inline-flex items-center gap-2 font-semibold text-[var(--link)] transition hover:underline">
                     Learn More <ArrowRight size={16} />
                   </Link>
                 </article>
@@ -275,18 +276,17 @@ export default function HomePage() {
           </div>
 
           <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {siteConfig.solutions.map((solution) => (
-              <div key={solution.name} className="card-panel flex h-full flex-col p-6">
-                <h3 className="text-2xl font-bold text-[var(--text)]">{solution.name}</h3>
-                <p className="mt-4 text-[var(--text-soft)]">{solution.overview}</p>
+            {solutions.map((solution) => (
+              <div key={solution.slug} className="card-panel flex h-full flex-col p-6">
+                <h3 className="text-2xl font-bold text-[var(--text)]">{solution.title}</h3>
+                <p className="mt-4 text-[var(--text-soft)]">{solution.summary}</p>
                 <div className="mt-6 space-y-3 text-sm text-[var(--text)]">
                   <div><span className="font-semibold text-[var(--text)]">Features:</span> {solution.features.join(', ')}</div>
-                  <div><span className="font-semibold text-[var(--text)]">Benefits:</span> {solution.benefits.join(', ')}</div>
-                  <div><span className="font-semibold text-[var(--text)]">Industries:</span> {solution.industries.join(', ')}</div>
+                  <div><span className="font-semibold text-[var(--text)]">Outcomes:</span> {solution.outcomes.join(', ')}</div>
                 </div>
-                <a href="#contact" className="mt-6 inline-flex items-center gap-2 font-semibold text-[var(--link)]">
-                  Request a Demo <ArrowRight size={16} />
-                </a>
+                <Link href={solution.href} className="mt-6 inline-flex items-center gap-2 font-semibold text-[var(--link)] hover:underline">
+                  Explore solution <ArrowRight size={16} />
+                </Link>
               </div>
             ))}
           </div>
@@ -300,13 +300,13 @@ export default function HomePage() {
             <h2 className="section-title mx-auto mt-6 max-w-3xl">Industries We Serve</h2>
           </div>
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {siteConfig.industries.map((industry) => (
-              <div key={industry} className="card-panel p-6 text-center text-[var(--text)]">
+            {industries.map((industry) => (
+              <Link key={industry.slug} href={industry.href} className="card-panel p-6 text-center text-[var(--text)]">
                 <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/20 to-violet-500/20 text-[var(--link)]">
                   <CheckCircle2 size={22} />
                 </div>
-                <p className="text-lg font-semibold text-[var(--text)]">{industry}</p>
-              </div>
+                <p className="text-lg font-semibold text-[var(--text)]">{industry.title}</p>
+              </Link>
             ))}
           </div>
         </div>
@@ -361,7 +361,7 @@ export default function HomePage() {
               </div>
               <div className="flex flex-wrap gap-4">
                 <a href="#contact" className="primary-btn">Get Free Consultation</a>
-                <a href="#quote" className="secondary-btn">Request a Quote</a>
+                <Link href="/get-quote" className="secondary-btn">Request a Quote</Link>
               </div>
             </div>
           </div>

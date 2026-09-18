@@ -10,18 +10,6 @@ export const siteConfig = {
     x: '#',
     youtube: '#',
   },
-  navItems: [
-    { label: 'Home', href: '/' },
-    { label: 'About Us', href: '/about' },
-    { label: 'Services', href: '/services' },
-    { label: 'Solutions', href: '/solutions' },
-    { label: 'Portfolio', href: '/portfolio' },
-    { label: 'Technologies', href: '/technologies' },
-    { label: 'Industries', href: '/industries' },
-    { label: 'Blogs', href: '/blogs' },
-    { label: 'Careers', href: '/careers' },
-    { label: 'Contact Us', href: '/contact' },
-  ],
   stats: [
     { label: 'Projects Completed', value: '150', suffix: '+' },
     { label: 'Happy Clients', value: '90', suffix: '%' },
