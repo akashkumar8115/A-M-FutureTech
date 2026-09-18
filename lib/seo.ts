@@ -27,13 +27,13 @@ export function pageMetadata(options: {
       url,
       siteName: 'A&M FutureTech',
       type: options.type || 'website',
-      images: options.image ? [{ url: options.image }] : undefined,
+      images: options.image ? [{ url: options.image }] : [{ url: '/logo.png', width: 900, height: 665, alt: 'A&M FutureTech Solution Pvt Ltd' }],
     },
     twitter: {
       card: 'summary_large_image',
       title: fullTitle,
       description: options.description,
-      images: options.image ? [options.image] : undefined,
+      images: options.image ? [options.image] : ['/logo.png'],
     },
   };
 }
@@ -44,6 +44,7 @@ export function organizationJsonLd() {
     '@type': 'Organization',
     name: 'A&M FutureTech Solution Pvt Ltd',
     url: siteUrl,
+    logo: `${siteUrl}/logo.png`,
     email: 'info@amfuturetech.com',
     sameAs: [],
     description: 'Software, web, mobile, cloud and IT services for modern businesses.',

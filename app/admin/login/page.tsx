@@ -3,6 +3,7 @@
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { Logo } from '@/components/Logo';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -34,6 +35,9 @@ export default function AdminLoginPage() {
   return (
     <main className="flex min-h-screen items-center justify-center px-4">
       <form onSubmit={handleSubmit} className="form-shell w-full max-w-md p-8">
+        <div className="mb-6">
+          <Logo size="md" />
+        </div>
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="badge">Admin</p>

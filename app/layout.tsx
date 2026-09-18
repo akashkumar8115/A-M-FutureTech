@@ -25,17 +25,27 @@ export const metadata: Metadata = {
     'ERP development',
     'A&M FutureTech',
   ],
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/icon.png', type: 'image/png', sizes: '192x192' },
+    ],
+    apple: [{ url: '/apple-icon.png', sizes: '180x180' }],
+    shortcut: '/favicon.ico',
+  },
   openGraph: {
     title: 'A&M FutureTech Solution Pvt Ltd',
     description: 'Custom software, web, mobile and cloud solutions designed to help businesses grow.',
     url: siteUrl,
     siteName: 'A&M FutureTech',
     type: 'website',
+    images: [{ url: '/logo.png', width: 900, height: 665, alt: 'A&M FutureTech Solution Pvt Ltd' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'A&M FutureTech Solution Pvt Ltd',
     description: 'Custom software, web, mobile and cloud solutions designed to help businesses grow.',
+    images: ['/logo.png'],
   },
   robots: { index: true, follow: true },
   alternates: { canonical: siteUrl },

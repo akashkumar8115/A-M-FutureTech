@@ -45,7 +45,7 @@ export function Header() {
     <header className="site-header sticky top-0 z-50 border-b backdrop-blur-xl">
       <div className="container flex items-center gap-3 py-2.5 lg:gap-4 lg:py-3">
         <Link href="/" aria-label="A&M FutureTech home" className="shrink-0" onClick={() => setMobileOpen(false)}>
-          <Logo className="[&_svg]:h-12 [&_svg]:w-12 sm:[&_svg]:h-[3.75rem] sm:[&_svg]:w-[3.75rem] lg:[&_svg]:h-16 lg:[&_svg]:w-16" />
+          <Logo size="md" priority />
         </Link>
 
         <nav className="desktop-nav ml-2 hidden min-w-0 flex-1 items-center justify-center gap-0.5 xl:gap-1.5 lg:flex" aria-label="Primary">

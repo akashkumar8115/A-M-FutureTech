@@ -33,13 +33,9 @@ export function Footer() {
       <div className="container py-16">
         <div className="grid gap-10 md:grid-cols-2 xl:grid-cols-5">
           <div className="xl:col-span-2">
-            <div className="flex flex-wrap items-center gap-4">
-              <Logo />
-              <div>
-                <p className="font-semibold text-[var(--text)]">A&amp;M FutureTech Solutions Pvt. Ltd.</p>
-                <p className="mt-1 text-sm tracking-[0.16em] text-[var(--link)]">Innovate | Integrate | Elevate</p>
-              </div>
-            </div>
+            <Link href="/" aria-label="A&M FutureTech home" className="inline-flex">
+              <Logo size="lg" />
+            </Link>
             <p className="mt-5 max-w-md text-[var(--text-soft)]">
               We build secure, scalable, high-performance digital products for businesses ready to grow with modern technology.
             </p>

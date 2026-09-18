@@ -8,8 +8,8 @@ export default function AboutPage() {
       <section className="section-shell">
         <div className="container max-w-5xl">
           <div className="grid items-center gap-8 md:grid-cols-[auto_1fr]">
-            <div className="flex h-36 w-36 items-center justify-center rounded-2xl border border-[var(--border)] bg-[var(--chip)] p-3 shadow-[var(--shadow-soft)]">
-              <Logo />
+            <div className="flex items-center justify-center rounded-2xl border border-[var(--border)] bg-white p-5 shadow-[var(--shadow-soft)]">
+              <Logo size="xl" />
             </div>
             <div>
               <span className="badge">About us</span>
